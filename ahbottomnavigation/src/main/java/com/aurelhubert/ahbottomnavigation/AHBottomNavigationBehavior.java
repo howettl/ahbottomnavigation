@@ -18,6 +18,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
 
+import com.aurelhubert.ahbottomnavigation.AHBottomNavigation.OnNavigationPositionListener;
+
 /**
  *
  */
@@ -37,6 +39,7 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	private boolean fabBottomMarginInitialized = false;
 	private float targetOffset = 0, fabTargetOffset = 0, fabDefaultBottomMargin = 0, snackBarY = 0;
 	private boolean behaviorTranslationEnabled = true;
+	private OnNavigationPositionListener navigationPositionListener;
 
 	/**
 	 * Constructor
@@ -179,6 +182,10 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 						p.setMargins(p.leftMargin, p.topMargin, p.rightMargin, (int) fabTargetOffset);
 						floatingActionButton.requestLayout();
 					}
+					// Pass navigation height to listener
+					if (navigationPositionListener != null) {
+						navigationPositionListener.onPositionChange((int) (view.getMeasuredHeight() - view.getTranslationY() + snackBarY));
+					}
 				}
 			});
 			translationAnimator.setInterpolator(INTERPOLATOR);
@@ -218,6 +225,10 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 					p.setMargins(p.leftMargin, p.topMargin, p.rightMargin, (int) fabTargetOffset);
 					floatingActionButton.requestLayout();
 				}
+				// Pass navigation height to listener
+				if (navigationPositionListener != null) {
+					navigationPositionListener.onPositionChange((int) (child.getMeasuredHeight() - child.getTranslationY() + snackBarY));
+				}
 			}
 		});
 	}
@@ -247,6 +258,20 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 	 */
 	public void setBehaviorTranslationEnabled(boolean behaviorTranslationEnabled) {
 		this.behaviorTranslationEnabled = behaviorTranslationEnabled;
+	}
+
+	/**
+	 * Set OnNavigationPositionListener
+	 */
+	public void setOnNavigationPositionListener(OnNavigationPositionListener navigationHeightListener) {
+		this.navigationPositionListener = navigationHeightListener;
+	}
+
+	/**
+	 * Remove OnNavigationPositionListener()
+	 */
+	public void removeOnNavigationPositionListener() {
+		this.navigationPositionListener = null;
 	}
 
 	/**
@@ -292,6 +317,10 @@ public class AHBottomNavigationBehavior<V extends View> extends VerticalScrollin
 							fabTargetOffset = fabDefaultBottomMargin - child.getTranslationY() + snackBarY;
 							p.setMargins(p.leftMargin, p.topMargin, p.rightMargin, (int) fabTargetOffset);
 							floatingActionButton.requestLayout();
+						}
+						// Pass navigation height to listener
+						if (navigationPositionListener != null) {
+							navigationPositionListener.onPositionChange((int) (child.getMeasuredHeight() - child.getTranslationY() + snackBarY));
 						}
 					}
 				});

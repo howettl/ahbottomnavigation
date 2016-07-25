@@ -5,13 +5,8 @@ Library to implement the Bottom Navigation component from Material Design guidel
 ## Demo
 <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo1.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo2.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo3.gif" width="208" height="368" /> <img src="https://raw.githubusercontent.com/aurelhubert/ahbottomnavigation/master/demo4.gif" width="208" height="368" />
 
-## What's new (1.3.0) - [Changelog](https://github.com/aurelhubert/ahbottomnavigation/blob/master/CHANGELOG.md)
-
-* **BREAKING!** Updated listener, now return a boolean => `boolean onTabSelected(int position, boolean wasSelected);`
-* Improved notification management for small items
-* Added notification elevation
-* Managed complex drawable (selector with states)
-* Added constructor `public AHBottomNavigationItem(String title, Drawable drawable)`
+## What's new (1.3.3) - [Changelog](https://github.com/aurelhubert/ahbottomnavigation/blob/master/CHANGELOG.md)
+* Added a setup method with colors for `AHBottomNavigationAdapter`
 
 ## Features
 * Follow the bottom navigation guidelines (https://www.google.com/design/spec/components/bottom-navigation.html)
@@ -26,7 +21,7 @@ Library to implement the Bottom Navigation component from Material Design guidel
 ### Gradle
 ```groovy
 dependencies {
-    compile 'com.aurelhubert:ahbottomnavigation:1.3.0'
+    compile 'com.aurelhubert:ahbottomnavigation:1.3.3'
 }
 ```
 ### XML
@@ -97,7 +92,7 @@ bottomNavigation.setNotificationBackgroundColor(Color.parseColor("#F63D2B"));
 bottomNavigation.setNotification("4", 1);
 bottomNavigation.setNotification("", 1);
 
-// Set listener
+// Set listeners
 bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedListener() {
 	@Override
 	public boolean onTabSelected(int position, boolean wasSelected) {
@@ -105,6 +100,19 @@ bottomNavigation.setOnTabSelectedListener(new AHBottomNavigation.OnTabSelectedLi
         return true;
 	}
 });
+bottomNavigation.setOnNavigationPositionListener(new AHBottomNavigation.OnNavigationPositionListener() {
+	@Override public void onPositionChange(int y) {
+		// Manage the new y position
+	}
+});
+```
+
+### With XML menu
+```java
+int[] tabColors = getApplicationContext().getResources().getIntArray(R.array.tab_colors);
+AHBottomNavigation bottomNavigation = (AHBottomNavigation) findViewById(R.id.bottom_navigation);
+AHBottomNavigationAdapter navigationAdapter = new AHBottomNavigationAdapter(this, R.menu.bottom_navigation_menu_3);
+navigationAdapter.setupWithBottomNavigation(bottomNavigation, tabColors);
 ```
 
 ## TODO
